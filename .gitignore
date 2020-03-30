@@ -1,0 +1,11 @@
+*.gcda
+*.gcno
+*.vg
+*.o
+*~
+a.out
+strace
+unit_tests
+boostrap
+loloolo
+trace_pid2.c
