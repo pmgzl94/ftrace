@@ -33,7 +33,7 @@ CRT = $(addprefix $(CRITDIR), $(CRT_SRC))
 
 NAME	=	ftrace
 
-CPPFLAGS	+=	-I include -lelf
+CPPFLAGS	+=	-I include -I liblkl/include/ -lelf
 
 all:	$(NAME)
 
@@ -41,7 +41,8 @@ all:	$(NAME)
 # 	gcc -c $(SRC) -I include
 
 $(NAME):	$(OBJ)
-	gcc -o $(NAME) $(OBJ) $(CPPFLAGS)
+	$(MAKE) -C liblkl
+	gcc -o $(NAME) $(OBJ) $(CPPFLAGS) -L ./liblkl -llkl
 	# gcc -c $(SRC) -lelf -I include
 
 tests_run:
@@ -52,10 +53,13 @@ tests_run:
 		rm unit_tests
 
 clean:
+	$(MAKE) -C liblkl clean
 	rm -f $(OBJ)
 	rm -rf *.o *.gc* *vg* unit_tests
 
 fclean:	clean
+	$(MAKE) -C liblkl fclean
 	rm -f $(NAME)
 
 re:	fclean all
+	$(MAKE) -C liblkl re

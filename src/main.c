@@ -7,6 +7,7 @@
 
 #include "strace.h"
 #include "error_handling.h"
+#include "list.h"
 
 int main(int ac, char **av, char **env)
 {
