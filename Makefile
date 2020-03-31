@@ -31,7 +31,7 @@ CRT_SRC	=	test.c		\
 
 CRT = $(addprefix $(CRITDIR), $(CRT_SRC))
 
-NAME	=	fstrace
+NAME	=	ftrace
 
 CPPFLAGS	+=	-I include -lelf
 

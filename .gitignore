@@ -3,9 +3,10 @@
 *.vg
 *.o
 *~
+
 a.out
-strace
+ftrace
 unit_tests
+
 boostrap
 loloolo
-trace_pid2.c
