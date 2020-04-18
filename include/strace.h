@@ -21,6 +21,7 @@
 #include <sys/user.h>
 #include <sys/syscall.h>
 #include "ref_syscall.h"
+#include "list.h"
 
 struct info_elf {
     long long unsigned start_address;
@@ -32,7 +33,7 @@ char **get_args(int ac, char **av);
 
 void get_registers(pid_t pid, struct user_regs_struct *reg,
         unsigned short value, long *args_syscall);
-int read_syscall(pid_t pid, char flag, long *syscall);
+int read_syscall(pid_t pid, char flag, long *syscall, list_t *list);
 
 int trace_pid(pid_t pid, char flag);
 

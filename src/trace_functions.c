@@ -10,6 +10,7 @@
 #include "ref_syscall_snd.h"
 #include "ref_syscall_fst.h"
 #include "ref_syscall.h"
+#include "ftrace.h"
 
 void get_registers(pid_t pid, struct user_regs_struct *reg,
         unsigned short value, long *args_syscall)
@@ -67,24 +68,33 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     return (status);
 }
 
-int read_syscall(pid_t pid, char flag, long *args_syscall)
+int read_syscall(pid_t pid, char flag, long *args_syscall, list_t *fct_list)
 {
     int status = 0;
     struct user_regs_struct reg;
     unsigned short syscall_type;
+    list_t *stack_fcts = NULL;
+    unsigned char c;
+    unsigned long long inst;
 
     while (1) {
         ptrace(PTRACE_GETREGS, pid, NULL, &reg);
         syscall_type = (unsigned short)ptrace(PTRACE_PEEKTEXT, pid, reg.rip,
                 NULL);
+        inst = ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL);
+        c = ((unsigned char *) &inst)[0];
         if (syscall_type == 0x80CD || syscall_type == 0x050F) {
+            write(1, "Syscall ", 8);
             status = get_and_print_syscall(pid, flag, args_syscall, reg);
             if (WIFEXITED(status)) {
                 printf(") = ?\n");
                 printf("+++ exited with %d +++\n", WEXITSTATUS(status));
                 return (WEXITSTATUS(status));
             }
+        } else if (c == 0xE8) {
+            display_near_call(pid, inst, fct_list, &stack_fcts);
         }
+        //check_ret
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
         waitpid(pid, &status, 0);
     }

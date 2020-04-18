@@ -19,6 +19,8 @@ SRC_SRC	=	main.c					\
 			display_array.c			\
 			get_fcts.c				\
 			symbol_s_fcts.c			\
+			fct_list.c				\
+			near_call.c				\
 
 
 SRC =	$(addprefix $(SRCDIR), $(SRC_SRC))
@@ -35,7 +37,7 @@ CRT = $(addprefix $(CRITDIR), $(CRT_SRC))
 
 NAME	=	ftrace
 
-CPPFLAGS	+=	-I include -I liblkl/include/ -lelf
+CPPFLAGS	+=	-I include -I liblkl/include/ -lelf -g
 
 all:	$(NAME)
 

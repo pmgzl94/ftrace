@@ -41,8 +41,10 @@ static int fork_program(char **args, char **env, char flag)
         exit(0);
     }
     waitpid(pid, NULL, 0);
-    return_value = read_syscall(pid, flag, args_syscall);
+    return_value = read_syscall(pid, flag, args_syscall, list);
     free(args_syscall);
+    //have to free struct s 
+    remove_whole_list(&list);
     return (return_value);
 }
 
