@@ -6,6 +6,7 @@
 */
 
 #include "strace.h"
+#include "ftrace.h"
 
 static int check_executable(char **args)
 {
@@ -29,7 +30,10 @@ static int fork_program(char **args, char **env, char flag)
     pid_t pid;
     long *args_syscall = malloc(sizeof(long) * 7);
     int return_value = 0;
+    list_t *list;
 
+    elf_version(EV_CURRENT);
+    list = get_functions(args[0]);
     if ((pid = fork()) == 0) {
         ptrace(PTRACE_TRACEME, 0, 0, 0);
         kill(getpid(), SIGSTOP);

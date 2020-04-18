@@ -9,14 +9,16 @@ SRCDIR = src/
 
 SRC_SRC	=	main.c					\
 			strace.c				\
-			check_args.c				\
+			check_args.c			\
 			get_args.c				\
-			trace_program.c				\
+			trace_program.c			\
 			trace_pid.c				\
 			trace_functions.c		\
 			display.c				\
 			display_flag_s.c		\
-			display_array.c\
+			display_array.c			\
+			get_fcts.c				\
+			symbol_s_fcts.c			\
 
 
 SRC =	$(addprefix $(SRCDIR), $(SRC_SRC))
