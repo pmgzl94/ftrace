@@ -21,6 +21,7 @@ SRC_SRC	=	main.c					\
 			symbol_s_fcts.c			\
 			fct_list.c				\
 			near_call.c				\
+			return.c				\
 
 
 SRC =	$(addprefix $(SRCDIR), $(SRC_SRC))
