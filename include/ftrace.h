@@ -35,4 +35,6 @@ int display_return_call(list_t **stack_fcts, unsigned long long inst);
 
 char *fetch_symbol_name(list_t *fct_list, unsigned long long addr);
 
+int call_abs_ind(pid_t pid, long long unsigned inst, list_t **fct_list);
+
 #endif

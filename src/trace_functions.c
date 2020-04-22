@@ -85,7 +85,6 @@ int read_syscall(pid_t pid, char flag, long *args_syscall, list_t *fct_list)
         c = ((unsigned char *) &inst)[0];
         // printf("%X\n", c);
         if (syscall_type == 0x80CD || syscall_type == 0x050F) {
-            write(1, "Syscall ", 8);
             status = get_and_print_syscall(pid, flag, args_syscall, reg);
             if (WIFEXITED(status)) {
                 printf(") = ?\n");
@@ -98,7 +97,9 @@ int read_syscall(pid_t pid, char flag, long *args_syscall, list_t *fct_list)
         else if (c == 0xC3 || c == 0xCB) {
             display_return_call(&stack_fcts, inst);
         }
-
+        else if (c == 0xFF) {
+            call_abs_ind(pid, inst, &fct_list);
+        }
         //check_ret
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
         waitpid(pid, &status, 0);
