@@ -27,9 +27,9 @@ struct symbol_s {
 Elf_Scn *find_symbol_section(Elf *elf);
 list_t *get_functions(char *elf_name);
 
-int get_rel(char *elf_name);
-
-int get_rela(char *elf_name);
+int check_rel_rela(char *elf_name);
+int get_rel(Elf_Scn *scn, Elf_Data *data, GElf_Shdr shdr, Elf *elf);
+int get_rela(Elf_Scn *scn, Elf_Data *data, GElf_Shdr shdr, Elf *elf);
 
 struct symbol_s *create_symbol_s(char *name, unsigned long addr);
 void free_symbol_s(struct symbol_s *symbol);

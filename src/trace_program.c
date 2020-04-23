@@ -34,8 +34,7 @@ static int fork_program(char **args, char **env, char flag)
 
     elf_version(EV_CURRENT);
     list = get_functions(args[0]);
-    // get_rela(args[0]);
-    // get_rel(args[0]);
+    check_rel_rela(args[0]);
     if ((pid = fork()) == 0) {
         ptrace(PTRACE_TRACEME, 0, 0, 0);
         kill(getpid(), SIGSTOP);
