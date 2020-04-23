@@ -12,12 +12,14 @@ int check_modrm_byte(long long unsigned inst)
     unsigned char c2 = (mod >> 4) & 1;
     unsigned char c3 = (mod >> 5) & 1;
 
-    printf("%d/%d/%d\n", c3, c2, c);
+//    printf("%d/%d/%d\n", c3, c2, c);
     // printf("%X\n", mod);
     if (!c && c2 && !c3) {
+//        printf("OOOOOOOOOOOOOOOOOOOOOOOOOO2222222222222222222222222222222\n");
         return (2);
     }
     if (c && c2 && !c3) {
+//        printf("33333333333333333333333333333\n");
         return (3);
     }
     return (0);
