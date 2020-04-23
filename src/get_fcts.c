@@ -31,7 +31,7 @@ static int is_function(size_t sh_idx, Elf *elf)
     return (0);
 }
 
-static Elf_Scn *find_symbol_section(Elf *elf)
+Elf_Scn *find_symbol_section(Elf *elf)
 {
     GElf_Shdr shdr;
     Elf_Scn     *scn = NULL;
@@ -42,7 +42,7 @@ static Elf_Scn *find_symbol_section(Elf *elf)
             break;
         }
     }
-    return (scn);   
+    return (scn);
 }
 
 static list_t *fill_list(Elf_Scn *scn, Elf_Data *data, Elf *elf)

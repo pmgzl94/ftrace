@@ -24,7 +24,12 @@ struct symbol_s {
     char *name;
 };
 
+Elf_Scn *find_symbol_section(Elf *elf);
 list_t *get_functions(char *elf_name);
+
+int get_rel(char *elf_name);
+
+int get_rela(char *elf_name);
 
 struct symbol_s *create_symbol_s(char *name, unsigned long addr);
 void free_symbol_s(struct symbol_s *symbol);
