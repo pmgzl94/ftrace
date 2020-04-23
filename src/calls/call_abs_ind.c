@@ -1,31 +1,5 @@
 #include "ftrace.h"
 #include "strace.h"
-
-<<<<<<< HEAD
-int check_modrm_byte(long long unsigned inst)
-{
-    // printf("1-%X\n", ((unsigned char *) &inst)[0]);
-    unsigned char mod = inst >> 8;
-    // printf("21-%X\n", mod);
-    mod = ((unsigned char *) &inst)[1];
-    // printf("22-%X\n", mod);
-    unsigned char c = (mod >> 3) & 1;
-    unsigned char c2 = (mod >> 4) & 1;
-    unsigned char c3 = (mod >> 5) & 1;
-
-//    printf("%d/%d/%d\n", c3, c2, c);
-    // printf("%X\n", mod);
-    if (!c && c2 && !c3) {
-//        printf("OOOOOOOOOOOOOOOOOOOOOOOOOO2222222222222222222222222222222\n");
-        return (2);
-    }
-    if (c && c2 && !c3) {
-//        printf("33333333333333333333333333333\n");
-        return (3);
-    }
-    return (0);
-}
-=======
 // int check_modrm_byte(long long unsigned inst)
 // {
 //     // printf("1-%X\n", ((unsigned char *) &inst)[0]);
@@ -47,8 +21,6 @@ int check_modrm_byte(long long unsigned inst)
 //     }
 //     return (0);
 // }
-
->>>>>>> 8221fb8075643820e631bda65c7ee4fa018b1165
 
 long long unsigned get_addr_from_register(pid_t pid, unsigned char mod_rm)
 {
