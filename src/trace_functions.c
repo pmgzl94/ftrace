@@ -98,7 +98,7 @@ int read_syscall(pid_t pid, char flag, long *args_syscall, list_t *fct_list)
             display_return_call(&stack_fcts, inst);
         }
         else if (c == 0xFF) {
-            call_abs_ind(pid, inst, &fct_list);
+            // call_abs_ind(pid, inst, &fct_list);
         }
         //check_ret
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);

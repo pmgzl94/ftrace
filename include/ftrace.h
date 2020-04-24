@@ -18,6 +18,7 @@
 #define SYSCALL 1
 #define RET 2
 #define NEAR_CALL_REL_ADDR 3
+#define NEAR_CALL_ABS_ADDR 4
 
 struct symbol_s {
     unsigned long addr;
@@ -43,7 +44,7 @@ int display_return_call(list_t **stack_fcts, unsigned long long inst);
 
 char *fetch_symbol_name(list_t *fct_list, unsigned long long addr);
 
-int call_abs_ind(pid_t pid, long long unsigned inst, list_t **fct_list);
+int call_abs_ind(pid_t pid, long long unsigned inst, list_functions_t **lists_fcts, list_t **stack_fct);
 
 unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst);
 void isolate_mod_rm(unsigned char mod_rm, unsigned char *mod, unsigned char *reg, unsigned char *rm);
