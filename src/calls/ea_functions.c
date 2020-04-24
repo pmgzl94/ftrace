@@ -44,7 +44,7 @@ unsigned long long handle_snd_range_modrm(pid_t pid, long long unsigned inst, un
     struct user_regs_struct reg;
     unsigned long long addr;
 
-    ptrace(PTRACE_GETREGS, pid, &reg);
+    ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     if (rm == 7) {
         printf("\nsib\n");
         (-1); //SIB
