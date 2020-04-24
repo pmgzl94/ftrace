@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include "strace.h"
 #include <gelf.h>
-#include "ftrace.h"
 
 static Elf_Scn *find_rel_and_rela(Elf *elf, Elf_Scn *scn, int *rela)
 {

@@ -16,7 +16,7 @@ int display_near_call(pid_t pid, unsigned long long inst, list_functions_t *arr_
             handle_add_element(stack_fcts);
             (*stack_fcts)->data = symbol_name;
         } else {
-
+            //TODO check if it goes in plt section
         }
     }
     //else (0xFF/2)
