@@ -26,7 +26,7 @@ SRC_SRC	=	main.c					\
 			read_rela.c				\
 			calls/call_abs_ind.c	\
 			calls/ea_functions.c	\
-
+=
 SRC =	$(addprefix $(SRCDIR), $(SRC_SRC))
 
 OBJ	=	$(SRC:.c=.o)

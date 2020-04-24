@@ -1,3 +1,4 @@
+.gdb_history
 *.gcda
 *.gcno
 *.vg
@@ -7,6 +8,8 @@
 a.out
 ftrace
 unit_tests
+liblkl.a
 
 boostrap
 loloolo
+toto

@@ -30,12 +30,11 @@ static int fork_program(char **args, char **env, char flag)
     pid_t pid;
     long *args_syscall = malloc(sizeof(long) * 7);
     int return_value = 0;
-    list_t *list;
+    list_functions_t arr_list;
 
     elf_version(EV_CURRENT);
-    list = get_functions(args[0]);
-    // get_rela(args[0]);
-    // get_rel(args[0]);
+    arr_list.near_call = get_functions(args[0]);
+    arr_list.far_call = check_rel_rela(args[0]);
     if ((pid = fork()) == 0) {
         ptrace(PTRACE_TRACEME, 0, 0, 0);
         kill(getpid(), SIGSTOP);
@@ -43,10 +42,11 @@ static int fork_program(char **args, char **env, char flag)
         exit(0);
     }
     waitpid(pid, NULL, 0);
-    return_value = read_syscall(pid, flag, args_syscall, list);
+    return_value = read_syscall(pid, flag, args_syscall, arr_list.near_call);
     free(args_syscall);
     //have to free struct s 
-    remove_whole_list(&list);
+    remove_whole_list(&(arr_list.near_call));
+//    remove_whole_list(&(arr_list.far_call));
     return (return_value);
 }
 
