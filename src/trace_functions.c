@@ -68,7 +68,7 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     return (status);
 }
 
-int read_syscall(pid_t pid, char flag, long *args_syscall, list_t *fct_list)
+int read_syscall(pid_t pid, char flag, long *args_syscall, list_functions_t *arr_list)
 {
     int status = 0;
     struct user_regs_struct reg;
@@ -92,13 +92,13 @@ int read_syscall(pid_t pid, char flag, long *args_syscall, list_t *fct_list)
                 return (WEXITSTATUS(status));
             }
         } else if (c == 0xE8) {
-            display_near_call(pid, inst, fct_list, &stack_fcts);
+            display_near_call(pid, inst, arr_list, &stack_fcts);
         }
         else if (c == 0xC3 || c == 0xCB) {
             display_return_call(&stack_fcts, inst);
         }
         else if (c == 0xFF) {
-            // call_abs_ind(pid, inst, &fct_list);
+//            call_abs_ind(pid, inst, &(arr_list->near_call));
         }
         //check_ret
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);

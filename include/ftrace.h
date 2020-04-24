@@ -38,7 +38,7 @@ list_t *check_rel_rela(char *elf_name);
 struct symbol_s *create_symbol_s(char *name, unsigned long addr);
 void free_symbol_s(struct symbol_s *symbol);
 
-int display_near_call(pid_t pid, unsigned long long inst, list_t *fct_list, list_t **stack_fcts);
+int display_near_call(pid_t pid, unsigned long long inst, list_functions_t *arr_list, list_t **stack_fcts);
 
 int display_return_call(list_t **stack_fcts, unsigned long long inst);
 
