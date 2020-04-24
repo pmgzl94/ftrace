@@ -98,7 +98,10 @@ int read_syscall(pid_t pid, char flag, long *args_syscall, list_functions_t *arr
             display_return_call(&stack_fcts, inst);
         }
         else if (c == 0xFF) {
-//            call_abs_ind(pid, inst, &(arr_list->near_call));
+            call_abs_ind(pid, inst, &arr_list, &stack_fcts);
+        }
+        if (c == 0x9a) {
+            printf("\nfar call with 9a\n\n");
         }
         //check_ret
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
