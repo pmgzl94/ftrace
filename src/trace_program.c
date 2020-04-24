@@ -46,7 +46,8 @@ static int fork_program(char **args, char **env, char flag)
     free(args_syscall);
     //have to free struct s 
     remove_whole_list(&(arr_list.near_call));
-//    remove_whole_list(&(arr_list.far_call));
+    if (arr_list.far_call)
+        remove_whole_list(&(arr_list.far_call));
     return (return_value);
 }
 
