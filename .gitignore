@@ -1,4 +1,5 @@
 .gdb_history
+peda-session*
 *.gcda
 *.gcno
 *.vg

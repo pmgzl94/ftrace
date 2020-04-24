@@ -27,7 +27,6 @@ unsigned long long handle_fst_range_modrm(pid_t pid,
 
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     if (rm == 7) {
-        // printf("\nsib\n");
         (-1); //SIB
     }
     if (rm == 8) {
@@ -48,7 +47,6 @@ unsigned long long handle_snd_range_modrm(pid_t pid, long long unsigned inst,
 
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     if (rm == 7) {
-        // printf("\nsib\n");
         (-1);
     }
     else
@@ -85,7 +83,6 @@ unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst)
         //8bit
         // printf("mod = 1\n");
         addr = handle_snd_range_modrm(pid, inst, rm, mod);
-        // printf("addr %X & off = %d\n", addr, (unsigned char) (inst >> 16));
     }
     if (mod == 2) {
         //32bit

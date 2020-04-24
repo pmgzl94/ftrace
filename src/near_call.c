@@ -40,6 +40,9 @@ int display_near_call(pid_t pid, unsigned long long inst, list_functions_t *arr_
         addr = call_rel(pid);
     else if ((unsigned char) (inst) == 0xFF)
         addr = call_abs_ind(pid, inst);
+    else {
+        //TODO check if go to plt
+    }
     if (addr) {
         symbol_name = fetch_symbol_name(arr_list->near_call, addr);
         handle_add_element(stack_fcts);
