@@ -52,14 +52,16 @@ static list_t *fill_list(Elf_Scn *scn, Elf_Data *data, Elf *elf)
     list_t *list = NULL;
     int size;
     char *symbol_name;
+    char message[50];
 
-    gelf_getshdr(scn, &shdr);
+    if (gelf_getshdr(scn, &shdr) == NULL || shdr.sh_entsize == 0) {
+        return (NULL);
+    }
     size = shdr.sh_size / shdr.sh_entsize;
     for (int i = 0; i < size; i++) {
         gelf_getsym(data, i, &sym);
         symbol_name = elf_strptr(elf, shdr.sh_link, sym.st_name);
         if (strlen(symbol_name) && is_function(sym.st_shndx, elf)) {
-            // printf("%x %s\n", sym.st_value, symbol_name);
             handle_add_element(&list);
             list->data = create_symbol_s(symbol_name, sym.st_value);
         }

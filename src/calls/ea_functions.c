@@ -19,14 +19,15 @@ long long unsigned get_addr_from_register(pid_t pid, unsigned char mod_rm)
     return (regs[reg_nb]);
 }
 
-unsigned long long handle_fst_range_modrm(pid_t pid, long long unsigned inst, unsigned char rm)
+unsigned long long handle_fst_range_modrm(pid_t pid,
+        long long unsigned inst, unsigned char rm)
 {
     struct user_regs_struct reg;
     unsigned long long addr;
 
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     if (rm == 7) {
-        printf("\nsib\n");
+        // printf("\nsib\n");
         (-1); //SIB
     }
     if (rm == 8) {
@@ -39,20 +40,24 @@ unsigned long long handle_fst_range_modrm(pid_t pid, long long unsigned inst, un
     }
 }
 
-unsigned long long handle_snd_range_modrm(pid_t pid, long long unsigned inst, unsigned char rm)
+unsigned long long handle_snd_range_modrm(pid_t pid, long long unsigned inst,
+        unsigned char rm, unsigned char mod)
 {
     struct user_regs_struct reg;
     unsigned long long addr;
 
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     if (rm == 7) {
-        printf("\nsib\n");
-        (-1); //SIB
+        // printf("\nsib\n");
+        (-1);
     }
-    else {
+    else
         addr = get_addr_from_register(pid, inst >> 8);
-        return (ptrace(PTRACE_PEEKTEXT, pid, addr, NULL));
-    }
+    if (mod == 1)
+        addr += (unsigned char) (inst >> 16);
+    else
+        addr += (unsigned int) (inst >> 16);
+    return (ptrace(PTRACE_PEEKTEXT, pid, addr, NULL));
 }
 
 void isolate_mod_rm(unsigned char mod_rm, unsigned char *mod, unsigned char *reg, unsigned char *rm)
@@ -74,21 +79,21 @@ unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst)
 
     isolate_mod_rm(mod_rm, &mod, NULL, &rm);
 
-    // printf("mod = %d\n", mod);
     if (mod == 0)
         addr = handle_fst_range_modrm(pid, inst, rm);
     if (mod == 1) {
         //8bit
-        printf("mod = 1\n");
-        addr = handle_snd_range_modrm(pid, inst, rm) + (unsigned char) (inst >> 16);
+        // printf("mod = 1\n");
+        addr = handle_snd_range_modrm(pid, inst, rm, mod);
+        // printf("addr %X & off = %d\n", addr, (unsigned char) (inst >> 16));
     }
     if (mod == 2) {
         //32bit
-        printf("mod = 2\n");
-        addr = handle_snd_range_modrm(pid, inst, rm) + (unsigned int) (inst >> 16);
+        // printf("mod = 2\n");
+        addr = handle_snd_range_modrm(pid, inst, rm, mod);
     }
     if (mod == 3) {
-        printf("registre\n");
+        // printf("registre\n");
         addr = get_addr_from_register(pid, mod_rm);
     }
     return (addr);

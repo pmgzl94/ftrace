@@ -23,7 +23,6 @@ SRC_SRC	=	main.c					\
 			near_call.c				\
 			return.c				\
 			read_rel_rela.c			\
-			calls/call_abs_ind.c	\
 			calls/ea_functions.c	\
 
 SRC =	$(addprefix $(SRCDIR), $(SRC_SRC))
