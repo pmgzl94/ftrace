@@ -21,13 +21,16 @@
 #define NEAR_CALL_ABS_ADDR 4
 
 struct symbol_s {
-    unsigned long addr;
+    unsigned long long addr;
     char *name;
 };
 
 typedef struct list_functions_s {
     list_t *near_call;
     list_t *far_call;
+    unsigned long long start_plt;
+    unsigned long long end_plt;
+    char *elf_name;
 } list_functions_t;
 
 Elf_Scn *find_symbol_section(Elf *elf);
@@ -39,6 +42,7 @@ struct symbol_s *create_symbol_s(char *name, unsigned long addr);
 void free_symbol_s(struct symbol_s *symbol);
 
 int display_near_call(pid_t pid, unsigned long long inst, list_functions_t *arr_list, list_t **stack_fcts);
+void get_plt_addrs(char *elf_name, list_functions_t *arr_list);
 
 int display_return_call(list_t **stack_fcts, unsigned long long inst);
 

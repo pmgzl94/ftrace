@@ -25,6 +25,14 @@ static int check_executable(char **args)
     return (0);
 }
 
+static void fill_arr_list(char *elf_name, list_functions_t *arr_list)
+{
+    arr_list->near_call = get_functions(elf_name);
+    arr_list->far_call = check_rel_rela(elf_name);
+    arr_list->elf_name = elf_name;
+    get_plt_addrs(elf_name, arr_list);
+}
+
 static int fork_program(char **args, char **env, char flag)
 {
     pid_t pid;
@@ -33,8 +41,7 @@ static int fork_program(char **args, char **env, char flag)
     list_functions_t arr_list;
 
     elf_version(EV_CURRENT);
-    arr_list.near_call = get_functions(args[0]);
-    arr_list.far_call = check_rel_rela(args[0]);
+    fill_arr_list(args[0], &arr_list);
     if ((pid = fork()) == 0) {
         ptrace(PTRACE_TRACEME, 0, 0, 0);
         kill(getpid(), SIGSTOP);
