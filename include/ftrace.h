@@ -55,4 +55,6 @@ char *fetch_symbol_name(list_t *fct_list, unsigned long long addr);
 unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst);
 void isolate_mod_rm(unsigned char mod_rm, unsigned char *mod, unsigned char *reg, unsigned char *rm);
 
+int get_signal(pid_t pid);
+
 #endif

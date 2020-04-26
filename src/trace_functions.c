@@ -104,6 +104,7 @@ int read_syscall(pid_t pid, char flag, long *args_syscall,
             check_call(pid, ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL),
                     arr_list);
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
+        get_signal(pid);
         waitpid(pid, &status, 0);
     }
 }
