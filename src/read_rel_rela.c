@@ -44,7 +44,7 @@ static Elf_Scn *find_symbol_section2(Elf *elf)
     return (scn);
 }
 
-static int get_rela(Elf_Scn *scn, GElf_Shdr shdr, Elf *elf, list_t **list)
+static void get_rela(Elf_Scn *scn, GElf_Shdr shdr, Elf *elf, list_t **list)
 {
     Elf_Data *data;
     GElf_Rela rela;
@@ -57,25 +57,19 @@ static int get_rela(Elf_Scn *scn, GElf_Shdr shdr, Elf *elf, list_t **list)
 
     for (int i = 0; i < size; i++) {
         gelf_getrela(data, i, &rela);
-//        printf("address = %X\n", rela.r_offset);
         scn2 = find_symbol_section2(elf);
         gelf_getshdr(scn2, &shdr2);
         data2 = elf_getdata(scn2, NULL);
         gelf_getsym(data2, GELF_R_SYM(rela.r_info), &sym);
         if (GELF_R_TYPE(rela.r_info) == R_386_JMP_SLOT) {
-//            printf("name = %s\n", elf_strptr(elf, shdr2.sh_link, sym.st_name));
             handle_add_element(list);
-//            (*list)->data = create_symbol_s(symbol_name, sym.st_value);
-            (*list)->data = create_symbol_s(elf_strptr(elf, shdr2.sh_link, sym.st_name), rela.r_offset);
+            (*list)->data = create_symbol_s(
+                elf_strptr(elf, shdr2.sh_link, sym.st_name), rela.r_offset);
         }
-//        printf("type = %d\n", GELF_R_TYPE(rela.r_info));
-//        printf("R_386_JMP_SLOT = %d\n", R_386_JMP_SLOT);
-//        printf("elf_strptr(elf, shdr2.sh_link, sym.st_name) = %s\n\n", elf_strptr(elf, shdr2.sh_link, sym.st_name));
     }
-    return (0);
 }
 
-static int get_rel(Elf_Scn *scn, GElf_Shdr shdr, Elf *elf, list_t **list)
+static void get_rel(Elf_Scn *scn, GElf_Shdr shdr, Elf *elf, list_t **list)
 {
     Elf_Data *data;
     GElf_Rel rel;
@@ -88,21 +82,16 @@ static int get_rel(Elf_Scn *scn, GElf_Shdr shdr, Elf *elf, list_t **list)
 
     for (int i = 0; i < size; i++) {
         gelf_getrel(data, i, &rel);
-//        printf("address = %X\n", rel.r_offset);
         scn2 = find_symbol_section2(elf);
         gelf_getshdr(scn2, &shdr2);
         data2 = elf_getdata(scn2, NULL);
         gelf_getsym(data2, GELF_R_SYM(rel.r_info), &sym);
         if (GELF_R_TYPE(rel.r_info) == R_386_JMP_SLOT) {
-//            printf("name = %s\n", elf_strptr(elf, shdr2.sh_link, sym.st_name));
             handle_add_element(list);
-            (*list)->data = create_symbol_s(elf_strptr(elf, shdr2.sh_link, sym.st_name), rel.r_offset);
+            (*list)->data = create_symbol_s(
+                elf_strptr(elf, shdr2.sh_link, sym.st_name), rel.r_offset);
         }
-//        printf("type = %d\n", GELF_R_TYPE(rel.r_info));
-//        printf("R_386_JMP_SLOT = %d\n", R_386_JMP_SLOT);
-//        printf("elf_strptr(elf, shdr2.sh_link, sym.st_name) = %s\n\n", elf_strptr(elf, shdr2.sh_link, sym.st_name));
     }
-    return (0);
 }
 
 list_t *check_rel_rela(char *elf_name)

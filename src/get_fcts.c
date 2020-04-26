@@ -16,11 +16,10 @@
 
 static int is_function(size_t sh_idx, Elf *elf)
 {
-    GElf_Shdr   shdr;
+    GElf_Shdr shdr;
     Elf_Scn *scn;
     
     scn = elf_getscn(elf,  sh_idx);
-
     if (!gelf_getshdr(scn, &shdr)) {
         return (0);
     }
@@ -34,7 +33,7 @@ static int is_function(size_t sh_idx, Elf *elf)
 Elf_Scn *find_symbol_section(Elf *elf)
 {
     GElf_Shdr shdr;
-    Elf_Scn     *scn = NULL;
+    Elf_Scn *scn = NULL;
 
     while ((scn = elf_nextscn(elf, scn)) != NULL) {
         gelf_getshdr(scn, &shdr);

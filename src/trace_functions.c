@@ -68,7 +68,8 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     return (status);
 }
 
-int read_syscall(pid_t pid, char flag, long *args_syscall, list_functions_t *arr_list)
+int read_syscall(pid_t pid, char flag, long *args_syscall,
+        list_functions_t *arr_list)
 {
     int status = 0;
     struct user_regs_struct reg;
@@ -83,7 +84,6 @@ int read_syscall(pid_t pid, char flag, long *args_syscall, list_functions_t *arr
                 NULL);
         inst = ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL);
         c = ((unsigned char *) &inst)[0];
-        // printf("%X\n", c);
         if (syscall_type == 0x80CD || syscall_type == 0x050F) {
             status = get_and_print_syscall(pid, flag, args_syscall, reg);
             if (WIFEXITED(status)) {
@@ -103,7 +103,7 @@ int read_syscall(pid_t pid, char flag, long *args_syscall, list_functions_t *arr
         if (c == 0x9a) {
             printf("\nfar call with 9a\n\n");
         }
-        //check_ret
+        //check_ret //TODO jsp c'est quoi mais bon faut pas l'oublier
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
         waitpid(pid, &status, 0);
     }

@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2020
+** project
+** File description:
+** function
+*/
+
 #include "strace.h"
 
 void get_plt_addrs(char *elf_name, list_functions_t *arr_list)
@@ -26,7 +33,7 @@ void get_plt_addrs(char *elf_name, list_functions_t *arr_list)
 }
 
 unsigned long long call_abs_ind(pid_t pid, unsigned long long inst)//, list_functions_t **lists_fcts, list_t **stack_fct)
-{//TODO fixe this shitttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+{//TODO fixe this : why is there two call, one whith 4 argument and one with 2 ?????????????????????????????????????????????
     unsigned char reg_opcode = 0;
     long long unsigned addr = 0;
     char *symbol_name;
@@ -36,7 +43,7 @@ unsigned long long call_abs_ind(pid_t pid, unsigned long long inst)//, list_func
         printf("\ntype 3 !\n");
     }
     if (reg_opcode == 2) {
-        // printf("%x %x %x %x %x %x\n", (unsigned char) inst, (unsigned char) (inst >> 8), 
+        // printf("%x %x %x %x %x %x\n", (unsigned char) inst, (unsigned char) (inst >> 8),
         // (unsigned char) (inst >> 16), (unsigned char) (inst >> 24), (unsigned char) (inst >> 32), (unsigned char) (inst >> 40));
         addr = return_addr_from_modrm(pid, inst);
         // printf("addr = %x\n", addr);
@@ -54,8 +61,8 @@ unsigned long long call_rel(pid_t pid)
     return reg.rip;
 }
 
-static int check_plt(pid_t pid, unsigned long long rip, list_functions_t *arr_list,
-        list_t **stack_fcts)
+static int check_plt(pid_t pid, unsigned long long rip,
+        list_functions_t *arr_list, list_t **stack_fcts)
 {
     char *symbol_name;
     unsigned long long inst;
@@ -63,9 +70,7 @@ static int check_plt(pid_t pid, unsigned long long rip, list_functions_t *arr_li
     inst = (int)ptrace(PTRACE_PEEKTEXT, pid, rip + 2);
     if (rip > arr_list->start_plt && rip < arr_list->end_plt &&
             !fetch_symbol_name(arr_list->near_call, rip)) {
-//        printf("ON EST DANS LA PLT!!!!!!!\n");
         symbol_name = fetch_symbol_name(arr_list->far_call, (rip + 0x6 + inst));
-//        printf("symbol_name = %s\n", symbol_name);
         if (!symbol_name || strcmp(symbol_name, "exit") == 0)
             return (1);
         handle_add_element(stack_fcts);

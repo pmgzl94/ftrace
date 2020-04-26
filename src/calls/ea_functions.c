@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2020
+** project
+** File description:
+** function
+*/
+
 #include "strace.h"
 #include "ftrace.h"
 
@@ -5,7 +12,8 @@ long long unsigned get_addr_from_register(pid_t pid, unsigned char mod_rm)
 {
     struct user_regs_struct reg;
     long long unsigned regs[8];
-    unsigned char reg_nb = (mod_rm & 1) + ((mod_rm >> 1) & 1) * 2 + ((mod_rm >> 2) & 1) * 4;
+    unsigned char reg_nb = (mod_rm & 1) + ((mod_rm >> 1) & 1) * 2 +
+            ((mod_rm >> 2) & 1) * 4;
 
     ptrace(PTRACE_GETREGS, pid, NULL,  &reg);
     regs[0] = reg.rax;
@@ -58,14 +66,16 @@ unsigned long long handle_snd_range_modrm(pid_t pid, long long unsigned inst,
     return (ptrace(PTRACE_PEEKTEXT, pid, addr, NULL));
 }
 
-void isolate_mod_rm(unsigned char mod_rm, unsigned char *mod, unsigned char *reg, unsigned char *rm)
+void isolate_mod_rm(unsigned char mod_rm, unsigned char *mod,
+        unsigned char *reg, unsigned char *rm)
 {
     if (mod)
-       *mod = ((mod_rm >> 6) & 1) + ((mod_rm >> 7) & 1) * 2;
+        *mod = ((mod_rm >> 6) & 1) + ((mod_rm >> 7) & 1) * 2;
     if (reg)
-       *reg = ((mod_rm >> 3) & 1) + ((mod_rm >> 4) & 1) * 2 + ((mod_rm >> 5) & 1) * 4;
+        *reg = ((mod_rm >> 3) & 1) + ((mod_rm >> 4) & 1) * 2 +
+                ((mod_rm >> 5) & 1) * 4;
     if (rm)
-       *rm = (mod_rm & 1) + ((mod_rm >> 1) & 1) * 2 + ((mod_rm >> 2) & 1) * 4;
+        *rm = (mod_rm & 1) + ((mod_rm >> 1) & 1) * 2 + ((mod_rm >> 2) & 1) * 4;
 }
 
 unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst)
@@ -81,16 +91,13 @@ unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst)
         addr = handle_fst_range_modrm(pid, inst, rm);
     if (mod == 1) {
         //8bit
-        // printf("mod = 1\n");
         addr = handle_snd_range_modrm(pid, inst, rm, mod);
-    }
-    if (mod == 2) {
+    } else if (mod == 2) {
         //32bit
-        // printf("mod = 2\n");
         addr = handle_snd_range_modrm(pid, inst, rm, mod);
     }
     if (mod == 3) {
-        // printf("registre\n");
+        // printf("registre\n"); // TODO clean the file of comment and add them at the start of the function if needed
         addr = get_addr_from_register(pid, mod_rm);
     }
     return (addr);

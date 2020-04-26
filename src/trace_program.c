@@ -27,6 +27,7 @@ static int check_executable(char **args)
 
 static void fill_arr_list(char *elf_name, list_functions_t *arr_list)
 {
+    elf_version(EV_CURRENT);
     arr_list->near_call = get_functions(elf_name);
     if (arr_list->near_call)
         arr_list->is_stripped = 0;
@@ -44,7 +45,6 @@ static int fork_program(char **args, char **env, char flag)
     int return_value = 0;
     list_functions_t arr_list;
 
-    elf_version(EV_CURRENT);
     fill_arr_list(args[0], &arr_list);
     if ((pid = fork()) == 0) {
         ptrace(PTRACE_TRACEME, 0, 0, 0);
@@ -55,7 +55,7 @@ static int fork_program(char **args, char **env, char flag)
     waitpid(pid, NULL, 0);
     return_value = read_syscall(pid, flag, args_syscall, &arr_list);
     free(args_syscall);
-    //have to free struct s 
+    //have to free struct s //TODO where is the struct s ????
     remove_whole_list(&(arr_list.near_call));
     if (arr_list.far_call)
         remove_whole_list(&(arr_list.far_call));

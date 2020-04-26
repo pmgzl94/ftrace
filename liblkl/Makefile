@@ -8,15 +8,15 @@
 SRCDIR	=	src/
 
 SRC_SRC	=		rotate_linked_list.c	\
-                add_element.c			\
-                swap_element.c			\
+				add_element.c			\
+				swap_element.c			\
 				insert_element.c		\
-                list_to_array.c			\
-                remove_element.c		\
-                return_address.c		\
+				list_to_array.c			\
+				remove_element.c		\
+				return_address.c		\
 				return_size.c			\
-                complete_chained_list.c	\
-                filter_list.c			\
+				complete_chained_list.c	\
+				filter_list.c			\
 
 SRC		=	$(addprefix $(SRCDIR), $(SRC_SRC))
 

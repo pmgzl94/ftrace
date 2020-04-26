@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2020
+** project
+** File description:
+** function
+*/
+
 #include "ftrace.h"
 
 char *fetch_symbol_name(list_t *fct_list, unsigned long long addr)
