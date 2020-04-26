@@ -105,6 +105,7 @@ int read_syscall(pid_t pid, char flag, long *args_syscall,
         }
         //check_ret //TODO jsp c'est quoi mais bon faut pas l'oublier
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
+        get_signal(pid);
         waitpid(pid, &status, 0);
     }
 }

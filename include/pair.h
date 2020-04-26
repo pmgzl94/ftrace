@@ -9,8 +9,8 @@
 #define PAIR_H_
 
 typedef struct pair {
-    char *value;
     int key;
+    char *value;
 } pair_t;
 
 #endif
