@@ -101,6 +101,7 @@ int syscall_read(long *syscalls, unsigned short syscall_type, pid_t pid,
 
     ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
     waitpid(pid, &status, 0);
+    get_signal(pid);
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     get_registers(pid, &reg, syscall_type, syscalls);
     printf("\"");

@@ -58,13 +58,15 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     display_syscall(flag, args_syscall, syscall_type, pid);
     ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
     waitpid(pid, &status, 0);
+    get_signal(pid);
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     get_registers(pid, &reg, syscall_type, args_syscall);
-    if (!WIFEXITED(status))
+    if (!WIFEXITED(status)) {
         if (flag & FLAG_S) {
             print_return_value_s(args_syscall);
         } else
             print_return_value(args_syscall);
+    }
     return (status);
 }
 
@@ -83,8 +85,8 @@ void check_call(pid_t pid, struct user_regs_struct reg,
         fprintf(stderr, "\nfar call with 9a\n\n");
     if (ret == 0) {
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
-        get_signal(pid);
         waitpid(pid, status, 0);
+        get_signal(pid);
     }
 }
 
@@ -107,8 +109,8 @@ int read_syscall(pid_t pid, char flag, long *args_syscall,
                 return (WEXITSTATUS(status));
             }
             ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
-            get_signal(pid);
             waitpid(pid, &status, 0);
+            get_signal(pid);
         } else
             check_call(pid, reg, arr_list, &status);
     }

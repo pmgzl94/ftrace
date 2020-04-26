@@ -17,6 +17,7 @@ int display_return_call(list_t **stack_fcts, unsigned long long inst, pid_t pid)
         ptrace(PTRACE_GETREGS, pid, NULL, &reg);
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
         waitpid(pid, NULL, 0);
+        get_signal(pid);
         ptrace(PTRACE_GETREGS, pid, NULL, &reg);
         symb = (*stack_fcts)->data;
         if (symb->addr == reg.rip) {

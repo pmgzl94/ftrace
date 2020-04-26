@@ -22,7 +22,8 @@ int trace_pid(pid_t pid, char flag)
         return (84);
     }
     waitpid(pid, NULL, 0);
-    // return_value = read_syscall(pid, flag, args_syscall); //TODO what to do with this?????????
+    // return_value = read_syscall(pid, flag, args_syscall);
+    // TODO what to do with this?????????
     ptrace(PTRACE_DETACH, pid, NULL, NULL);
     return (return_value);
 }

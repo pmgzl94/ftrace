@@ -39,6 +39,16 @@ static void fill_arr_list(char *elf_name, list_functions_t *arr_list)
     get_plt_addrs(elf_name, arr_list);
 }
 
+static void free_lists(list_functions_t *arr_list)
+{
+    //have to free struct s //TODO edit remove_whole_list() because it only free the node and not the struct s inside
+    if (arr_list->near_call)
+        remove_whole_list(&(arr_list->near_call));
+    if (arr_list->far_call)
+        remove_whole_list(&(arr_list->far_call));
+    //TODO remove stack_functions properly
+}
+
 static int fork_program(char **args, char **env, char flag)
 {
     pid_t pid;
@@ -56,12 +66,7 @@ static int fork_program(char **args, char **env, char flag)
     waitpid(pid, NULL, 0);
     return_value = read_syscall(pid, flag, args_syscall, &arr_list);
     free(args_syscall);
-    //have to free struct s //TODO edit remove_whole_list() because it only free the node and not the struct s inside
-    if (arr_list.near_call)
-        remove_whole_list(&(arr_list.near_call));
-    if (arr_list.far_call)
-        remove_whole_list(&(arr_list.far_call));
-    //TODO remove stack_functions properly
+    free_lists(&arr_list);
     return (return_value);
 }
 
