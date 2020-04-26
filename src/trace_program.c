@@ -25,6 +25,31 @@ static int check_executable(char **args)
     return (0);
 }
 
+static void get_plt_addrs(char *elf_name, list_functions_t *arr_list)
+{
+    int fd = open(elf_name, O_RDONLY);
+    Elf *elf = elf_begin(fd, ELF_C_READ, NULL);
+    GElf_Shdr shdr;
+    GElf_Ehdr ehdr;
+    Elf_Scn *scn = NULL;
+    size_t shstrndx = 0;
+    int index = 0;
+
+    elf_getshdrstrndx(elf, &shstrndx);
+    while ((scn = elf_nextscn(elf, scn)) != NULL) {
+        gelf_getshdr(scn, &shdr);
+        if (strcmp(elf_strptr(elf, shstrndx, shdr.sh_name), ".plt") == 0) {
+            arr_list->start_plt = shdr.sh_addr;
+            index = 1;
+        } else if (index == 1) {
+            arr_list->end_plt = shdr.sh_addr;
+            index = 0;
+        }
+    }
+    elf_end(elf);
+    close(fd);
+}
+
 static void fill_arr_list(char *elf_name, list_functions_t *arr_list)
 {
     elf_version(EV_CURRENT);
