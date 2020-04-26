@@ -10,9 +10,6 @@
 
 #include "ref_syscall.h"
 
-
-
-
 const static struct ref_syscall ref_syscall_fst[435] = {
     {"restart_syscall", {}, 0},
     {"exit", {INT}, 1},

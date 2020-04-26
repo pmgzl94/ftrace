@@ -52,5 +52,4 @@ int syscall_read(long *syscalls, unsigned short syscall_type, pid_t pid,
 int display_array(pid_t pid, long *args_syscall, ref_syscall_t *sys,
         int reg_idx);
 
-
 #endif

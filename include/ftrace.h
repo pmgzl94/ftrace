@@ -47,7 +47,6 @@ void free_lists(list_functions_t *arr_list);
 //near_call.c
 int display_near_call(pid_t pid, unsigned long long inst,
         list_functions_t *arr_list, unsigned long long rsp);
-void get_plt_addrs(char *elf_name, list_functions_t *arr_list);
 
 int display_return_call(list_t **stack_fcts, unsigned long long inst,
         pid_t pid);

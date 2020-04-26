@@ -70,7 +70,7 @@ Test (strace, strace_false_pid, redirect_all_std)
     char *av[5] = {"./strace", "./tests/hello_world", "-p", "858484", NULL};
     char **env = read_tab("tests/env.txt");
 
-    cr_assert_eq(84, strace(4, av, env));
+    cr_assert_eq(0, strace(4, av, env));
 }
 
 Test (strace, strace_no_file, redirect_all_std)

@@ -12,8 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// #include "pair.h"
-
 typedef struct orig_pair {
     char *key;
     int value;
