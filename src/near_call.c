@@ -1,4 +1,3 @@
-#include "ftrace.h"
 #include "strace.h"
 
 void get_plt_addrs(char *elf_name, list_functions_t *arr_list)
@@ -7,8 +6,8 @@ void get_plt_addrs(char *elf_name, list_functions_t *arr_list)
     Elf *elf = elf_begin(fd, ELF_C_READ, NULL);
     GElf_Shdr shdr;
     GElf_Ehdr ehdr;
-    Elf_Scn *scn;
-    size_t shstrndx;
+    Elf_Scn *scn = NULL;
+    size_t shstrndx = 0;
     int index = 0;
 
     elf_getshdrstrndx(elf, &shstrndx);
@@ -27,7 +26,7 @@ void get_plt_addrs(char *elf_name, list_functions_t *arr_list)
 }
 
 unsigned long long call_abs_ind(pid_t pid, unsigned long long inst)//, list_functions_t **lists_fcts, list_t **stack_fct)
-{
+{//TODO fixe this shitttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
     unsigned char reg_opcode = 0;
     long long unsigned addr = 0;
     char *symbol_name;
@@ -93,11 +92,13 @@ int display_near_call(pid_t pid, unsigned long long inst,
         return (0);
     if (addr) {
         symbol_name = fetch_symbol_name(arr_list->near_call, addr);
-        handle_add_element(stack_fcts);
+        if (!symbol_name && arr_list->is_stripped == 0)
+            return (0);
         if (!symbol_name)
             asprintf(&symbol_name, "func_%#X@%s", addr, arr_list->elf_name);
         else
             symbol_name = strdup(symbol_name);
+        handle_add_element(stack_fcts);
         (*stack_fcts)->data = symbol_name;
         printf("Entering function %s at %#x\n", symbol_name, addr);
     }

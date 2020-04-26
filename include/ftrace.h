@@ -31,6 +31,7 @@ typedef struct list_functions_s {
     unsigned long long start_plt;
     unsigned long long end_plt;
     char *elf_name;
+    char is_stripped;
 } list_functions_t;
 
 Elf_Scn *find_symbol_section(Elf *elf);
@@ -41,8 +42,10 @@ list_t *check_rel_rela(char *elf_name);
 struct symbol_s *create_symbol_s(char *name, unsigned long addr);
 void free_symbol_s(struct symbol_s *symbol);
 
+//near_call.c
 int display_near_call(pid_t pid, unsigned long long inst, list_functions_t *arr_list, list_t **stack_fcts);
 void get_plt_addrs(char *elf_name, list_functions_t *arr_list);
+//unsigned long long call_abs_ind(pid_t pid, unsigned long long inst);
 
 int display_return_call(list_t **stack_fcts, unsigned long long inst);
 

@@ -7,6 +7,7 @@
 
 #ifndef STRACE_H_
 #define STRACE_H_
+#define _GNU_SOURCE
 
 #include <unistd.h>
 #include <fcntl.h>

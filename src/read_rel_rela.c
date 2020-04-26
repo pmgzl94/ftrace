@@ -115,7 +115,8 @@ list_t *check_rel_rela(char *elf_name)
     list_t *list = NULL;
 
     while (scn) {
-        gelf_getshdr(scn, &shdr);
+        if (gelf_getshdr(scn, &shdr) == NULL || shdr.sh_entsize == 0)
+            return (NULL);
         if (rela == 1)
             get_rela(scn, shdr, elf, &list);
         else if (rela == 0)

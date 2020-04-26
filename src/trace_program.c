@@ -28,6 +28,10 @@ static int check_executable(char **args)
 static void fill_arr_list(char *elf_name, list_functions_t *arr_list)
 {
     arr_list->near_call = get_functions(elf_name);
+    if (arr_list->near_call)
+        arr_list->is_stripped = 0;
+    else
+        arr_list->is_stripped = 1;
     arr_list->far_call = check_rel_rela(elf_name);
     arr_list->elf_name = elf_name;
     get_plt_addrs(elf_name, arr_list);
