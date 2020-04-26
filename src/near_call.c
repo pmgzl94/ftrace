@@ -48,18 +48,19 @@ unsigned long long call_abs_ind(pid_t pid, unsigned long long inst)
     return (addr);
 }
 
-unsigned long long call_rel(pid_t pid)
+unsigned long long call_rel(pid_t pid, unsigned long long *rsp)
 {
     struct user_regs_struct reg;
 
     ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
     waitpid(pid, NULL, 0);
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
+    *rsp = ptrace(PTRACE_PEEKTEXT, pid, reg.rsp, NULL);
     return reg.rip;
 }
 
 static int check_plt(pid_t pid, unsigned long long rip,
-        list_functions_t *arr_list, list_t **stack_fcts)
+        list_functions_t *arr_list, unsigned long long rsp)
 {
     char *symbol_name;
     unsigned long long inst;
@@ -70,9 +71,8 @@ static int check_plt(pid_t pid, unsigned long long rip,
         symbol_name = fetch_symbol_name(arr_list->far_call, (rip + 0x6 + inst));
         if (!symbol_name || strcmp(symbol_name, "exit") == 0)
             return (1);
-        handle_add_element(stack_fcts);
-        (*stack_fcts)->data = create_symbol_s(strdup(symbol_name), rip);
-//        (*stack_fcts)->data = strdup(symbol_name);
+        handle_add_element(&(arr_list->stack_fcts));
+        arr_list->stack_fcts->data = create_symbol_s(strdup(symbol_name), rsp);
         printf("Entering function %s at %#x\n", symbol_name, rip);
         return (0);
     }
@@ -80,19 +80,18 @@ static int check_plt(pid_t pid, unsigned long long rip,
 }
 
 int display_near_call(pid_t pid, unsigned long long inst,
-        list_functions_t *arr_list, list_t **stack_fcts)
+        list_functions_t *arr_list, unsigned long long rsp)
 {
     char *symbol_name;
     char *tmp;
     unsigned long long addr = 0;
-    unsigned long long old_addr = 0;
 
     if ((unsigned char) (inst) == 0xE8)
-        addr = call_rel(pid);
+        addr = call_rel(pid, &rsp);
     else if ((unsigned char) (inst) == 0xFF)
         addr = call_abs_ind(pid, inst);
     if ((unsigned char) (inst) == 0xE8 &&
-        check_plt(pid, addr, arr_list, stack_fcts) == 0)
+        check_plt(pid, addr, arr_list, rsp) == 0)
         return (0);
     if (addr) {
         symbol_name = fetch_symbol_name(arr_list->near_call, addr);
@@ -102,9 +101,8 @@ int display_near_call(pid_t pid, unsigned long long inst,
             asprintf(&symbol_name, "func_%#X@%s", addr, arr_list->elf_name);
         else
             symbol_name = strdup(symbol_name);
-        handle_add_element(stack_fcts);
-        (*stack_fcts)->data = create_symbol_s(symbol_name, addr);
-//        (*stack_fcts)->data = symbol_name;
+        handle_add_element(&(arr_list->stack_fcts));
+        arr_list->stack_fcts->data = create_symbol_s(symbol_name, rsp);
         printf("Entering function %s at %#x\n", symbol_name, addr);
     }
     return (0);

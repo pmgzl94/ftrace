@@ -68,18 +68,24 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     return (status);
 }
 
-void check_call(pid_t pid, unsigned long long inst, list_functions_t *arr_list)
+void check_call(pid_t pid, struct user_regs_struct reg,
+        list_functions_t *arr_list, int *status)
 {
+    unsigned long long inst = ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL);
     unsigned char c = ((unsigned char *) &inst)[0];
-    static list_t *stack_fcts = NULL;
+    int ret = 0;
 
     if (c == 0xE8 || c == 0xFF)
-        display_near_call(pid, inst, arr_list, &stack_fcts);
+        display_near_call(pid, inst, arr_list, reg.rsp);
     else if (c == 0xC3 || c == 0xCB)
-        display_return_call(&stack_fcts, inst, pid);
+        ret = display_return_call(&(arr_list->stack_fcts), inst, pid);
     if (c == 0x9a)
         fprintf(stderr, "\nfar call with 9a\n\n");
-    //check_ret //TODO jsp c'est quoi mais bon faut pas l'oublier
+    if (ret == 0) {
+        ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
+        get_signal(pid);
+        waitpid(pid, status, 0);
+    }
 }
 
 int read_syscall(pid_t pid, char flag, long *args_syscall,
@@ -100,11 +106,10 @@ int read_syscall(pid_t pid, char flag, long *args_syscall,
                 printf("+++ exited with %d +++\n", WEXITSTATUS(status));
                 return (WEXITSTATUS(status));
             }
+            ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
+            get_signal(pid);
+            waitpid(pid, &status, 0);
         } else
-            check_call(pid, ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL),
-                    arr_list);
-        ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
-        get_signal(pid);
-        waitpid(pid, &status, 0);
+            check_call(pid, reg, arr_list, &status);
     }
 }

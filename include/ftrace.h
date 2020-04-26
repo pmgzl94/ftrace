@@ -28,6 +28,7 @@ struct symbol_s {
 typedef struct list_functions_s {
     list_t *near_call;
     list_t *far_call;
+    list_t *stack_fcts;
     unsigned long long start_plt;
     unsigned long long end_plt;
     char *elf_name;
@@ -44,16 +45,18 @@ void free_symbol_s(struct symbol_s *symbol);
 
 //near_call.c
 int display_near_call(pid_t pid, unsigned long long inst,
-        list_functions_t *arr_list, list_t **stack_fcts);
+        list_functions_t *arr_list, unsigned long long rsp);
 void get_plt_addrs(char *elf_name, list_functions_t *arr_list);
 //unsigned long long call_abs_ind(pid_t pid, unsigned long long inst);
 
-int display_return_call(list_t **stack_fcts, unsigned long long inst, pid_t pid);
+int display_return_call(list_t **stack_fcts, unsigned long long inst,
+        pid_t pid);
 
 char *fetch_symbol_name(list_t *fct_list, unsigned long long addr);
 
 unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst);
-void isolate_mod_rm(unsigned char mod_rm, unsigned char *mod, unsigned char *reg, unsigned char *rm);
+void isolate_mod_rm(unsigned char mod_rm, unsigned char *mod,
+        unsigned char *reg, unsigned char *rm);
 
 int get_signal(pid_t pid);
 

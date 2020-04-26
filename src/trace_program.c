@@ -34,6 +34,7 @@ static void fill_arr_list(char *elf_name, list_functions_t *arr_list)
     else
         arr_list->is_stripped = 1;
     arr_list->far_call = check_rel_rela(elf_name);
+    arr_list->stack_fcts = NULL;
     arr_list->elf_name = elf_name;
     get_plt_addrs(elf_name, arr_list);
 }
@@ -60,6 +61,7 @@ static int fork_program(char **args, char **env, char flag)
         remove_whole_list(&(arr_list.near_call));
     if (arr_list.far_call)
         remove_whole_list(&(arr_list.far_call));
+    //TODO remove stack_functions properly
     return (return_value);
 }
 
