@@ -33,6 +33,14 @@ Test (strace, strace_working_int, redirect_all_std)
     cr_assert_eq(0, strace(36, av, env));
 }
 
+Test (strace, strace_working_striped_file, redirect_all_std)
+{
+    char *av[3] = {"./strace", "./tests/striped_toto", NULL};
+    char **env = read_tab("tests/env.txt");
+
+    cr_assert_eq(0, strace(3, av, NULL));
+}
+
 Test (strace, strace_working_but_tracee_failing, redirect_all_std)
 {
     char *av[3] = {"./strace", "./tests/ret_error", NULL};

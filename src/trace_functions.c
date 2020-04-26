@@ -101,7 +101,7 @@ int read_syscall(pid_t pid, char flag, long *args_syscall,
             call_abs_ind(pid, inst, &arr_list, &stack_fcts);
         }
         if (c == 0x9a) {
-            printf("\nfar call with 9a\n\n");
+            fprintf(stderr, "\nfar call with 9a\n\n");
         }
         //check_ret //TODO jsp c'est quoi mais bon faut pas l'oublier
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
