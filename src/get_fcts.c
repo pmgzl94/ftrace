@@ -18,13 +18,13 @@ static int is_function(size_t sh_idx, Elf *elf)
 {
     GElf_Shdr shdr;
     Elf_Scn *scn;
-    
+
     scn = elf_getscn(elf,  sh_idx);
     if (!gelf_getshdr(scn, &shdr)) {
         return (0);
     }
-    if (shdr.sh_type == SHT_PROGBITS 
-        && shdr.sh_flags == (SHF_ALLOC | SHF_EXECINSTR)) {
+    if (shdr.sh_type == SHT_PROGBITS &&
+            shdr.sh_flags == (SHF_ALLOC | SHF_EXECINSTR)) {
         return (1);
     }
     return (0);
