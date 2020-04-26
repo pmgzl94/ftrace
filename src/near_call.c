@@ -54,6 +54,7 @@ unsigned long long call_rel(pid_t pid)
 
     ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
     waitpid(pid, NULL, 0);
+    get_signal(pid);
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     return reg.rip;
 }

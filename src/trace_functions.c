@@ -58,13 +58,15 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     display_syscall(flag, args_syscall, syscall_type, pid);
     ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
     waitpid(pid, &status, 0);
+    get_signal(pid);
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     get_registers(pid, &reg, syscall_type, args_syscall);
-    if (!WIFEXITED(status))
+    if (!WIFEXITED(status)) {
         if (flag & FLAG_S) {
             print_return_value_s(args_syscall);
         } else
             print_return_value(args_syscall);
+    }
     return (status);
 }
 
@@ -104,7 +106,7 @@ int read_syscall(pid_t pid, char flag, long *args_syscall,
             check_call(pid, ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL),
                     arr_list);
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
-        get_signal(pid);
         waitpid(pid, &status, 0);
+        get_signal(pid);
     }
 }
