@@ -39,7 +39,7 @@ CRT = $(addprefix $(CRITDIR), $(CRT_SRC))
 
 NAME	=	ftrace
 
-CPPFLAGS	+=	-I include -I liblkl/include/ -lelf -g
+CPPFLAGS	+=	-I include -I liblkl/include/ -lelf -g3
 
 all:	$(NAME)
 
@@ -52,11 +52,12 @@ $(NAME):	$(OBJ)
 	# gcc -c $(SRC) -lelf -I include
 
 tests_run:
-		gcc $(filter-out src/main.c, $(SRC)) $(CRT) -o unit_tests  -I ./include/ --coverage -lcriterion
-		./unit_tests
-		gcovr --exclude tests
-		gcovr --exclude tests -b
-		rm unit_tests
+	$(MAKE) -C liblkl
+	gcc $(filter-out src/main.c, $(SRC)) $(CRT) -o unit_tests -I ./include/ -I liblkl/include/ -L ./liblkl -llkl -lelf --coverage -lcriterion
+	./unit_tests
+	gcovr --exclude tests
+	gcovr --exclude tests -b
+	rm unit_tests
 
 clean:
 	$(MAKE) -C liblkl clean
