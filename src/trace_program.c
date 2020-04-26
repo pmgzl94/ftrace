@@ -47,6 +47,7 @@ static int fork_program(char **args, char **env, char flag)
 
     fill_arr_list(args[0], &arr_list);
     if ((pid = fork()) == 0) {
+        signal(SIGTRAP, SIG_IGN);
         ptrace(PTRACE_TRACEME, 0, 0, 0);
         kill(getpid(), SIGSTOP);
         execve(args[0], args, env);
