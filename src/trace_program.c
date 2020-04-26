@@ -79,7 +79,7 @@ static int fork_program(char **args, char **env, char flag)
         exit(0);
     }
     waitpid(pid, NULL, 0);
-    return_value = read_syscall(pid, flag, args_syscall, &arr_list);
+    return_value = browse_instructions(pid, flag, args_syscall, &arr_list);
     free(args_syscall);
     free_lists(&arr_list);
     return (return_value);
