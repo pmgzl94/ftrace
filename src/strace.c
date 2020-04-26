@@ -15,15 +15,15 @@ int strace(int ac, char **av, char **env)
 
     if (ac == 2 && (strcmp("--help", av[1]) == 0 ||
                     strcmp("-h", av[1]) == 0)) {
-        printf("USAGE: ftrace <command>\n");
+        printf("USAGE: ftrace executable file [-s]\n\n");
+        printf("Output format:\n");
+        printf(" -s    display the detailled arguments (see below)\n");
+        printf("          -integers in decimal form\n");
+        printf("          -pointers on a character string in the form of a");
+        printf(" character string\n");
         return (0);
     }
     if ((flag = check_args(av, &pid)) == -1)
         return (84);
-    if (pid == -1) {
-        return trace_program(ac, av, env, flag);
-    } else {
-        return trace_pid(pid, flag);
-    }
-    return (0);
+    return trace_program(ac, av, env, flag);
 }

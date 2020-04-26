@@ -12,7 +12,6 @@ SRC_SRC	=	main.c					\
 			check_args.c			\
 			get_args.c				\
 			trace_program.c			\
-			trace_pid.c				\
 			trace_functions.c		\
 			display.c				\
 			display_flag_s.c		\

@@ -35,10 +35,9 @@ unsigned long long handle_fst_range_modrm(pid_t pid,
 
     ptrace(PTRACE_GETREGS, pid, NULL, &reg);
     if (rm == 7) {
-        (-1); //SIB
+        (-1);
     }
     if (rm == 8) {
-        //addr
         return (inst >> 16);
     }
     else {
@@ -90,14 +89,11 @@ unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst)
     if (mod == 0)
         addr = handle_fst_range_modrm(pid, inst, rm);
     if (mod == 1) {
-        //8bit
         addr = handle_snd_range_modrm(pid, inst, rm, mod);
     } else if (mod == 2) {
-        //32bit
         addr = handle_snd_range_modrm(pid, inst, rm, mod);
     }
     if (mod == 3) {
-        // printf("registre\n"); // TODO clean the file of comment and add them at the start of the function if needed
         addr = get_addr_from_register(pid, mod_rm);
     }
     return (addr);

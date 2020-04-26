@@ -37,8 +37,6 @@ void get_registers(pid_t pid, struct user_regs_struct *reg,
 int read_syscall(pid_t pid, char flag, long *syscall,
         list_functions_t *arr_list);
 
-int trace_pid(pid_t pid, char flag);
-
 int trace_program(int ac, char **av, char **env, char flag);
 
 int get_info_elf_file(struct info_elf *infos, char *filename);

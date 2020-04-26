@@ -5,7 +5,6 @@
 ** function
 */
 
-// #include <libelf.h>
 #include <gelf.h>
 #include "strace.h"
 
