@@ -73,7 +73,7 @@ static int check_plt(pid_t pid, unsigned long long rip,
         if (!symbol_name || strcmp(symbol_name, "exit") == 0)
             return (1);
         handle_add_element(&(arr_list->stack_fcts));
-        arr_list->stack_fcts->data = create_symbol_s(strdup(symbol_name), rsp);
+        arr_list->stack_fcts->data = create_symbol_s(symbol_name, rsp);
         printf("Entering function %s at %#x\n", symbol_name, rip);
         return (0);
     }
@@ -105,6 +105,7 @@ int display_near_call(pid_t pid, unsigned long long inst,
         handle_add_element(&(arr_list->stack_fcts));
         arr_list->stack_fcts->data = create_symbol_s(symbol_name, rsp);
         printf("Entering function %s at %#x\n", symbol_name, addr);
+        free(symbol_name);
     }
     return (0);
 }

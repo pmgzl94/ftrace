@@ -18,7 +18,7 @@ SRC_SRC	=	main.c					\
 			display_flag_s.c		\
 			display_array.c			\
 			get_fcts.c				\
-			symbol_s_fcts.c			\
+			ftrace_struct_fcts.c	\
 			fct_list.c				\
 			near_call.c				\
 			return.c				\
