@@ -90,7 +90,7 @@ void check_call(pid_t pid, struct user_regs_struct reg,
     }
 }
 
-int read_syscall(pid_t pid, char flag, long *args_syscall,
+int browse_instructions(pid_t pid, char flag, long *args_syscall,
         list_functions_t *arr_list)
 {
     int status = 0;
