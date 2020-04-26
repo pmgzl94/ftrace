@@ -43,8 +43,9 @@ int browse_array(pid_t pid, long *args_syscall, int reg_idx)
                 (args_syscall[reg_idx] + 8 * i), NULL);
         if (!addr)
             break;
-        else if (i != 0)
+        else if (i != 0) {
             printf(", ");
+        }
         if (i == 32) {
             printf("...");
             break;

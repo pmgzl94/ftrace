@@ -33,9 +33,8 @@ void free_lists(list_functions_t *arr_list)
         free_sym_list(&(arr_list->near_call));
     if (arr_list->far_call)
         free_sym_list(&(arr_list->far_call));
-    if (arr_list->stack_fcts) {
+    if (arr_list->stack_fcts)
         free_sym_list(&(arr_list->stack_fcts));
-    }
 }
 
 void free_symbol_s(struct symbol_s *symbol)

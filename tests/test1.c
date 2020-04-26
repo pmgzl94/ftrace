@@ -104,3 +104,19 @@ Test (strace, strace_strace_no_file, redirect_all_std)
 
     cr_assert_eq(84, strace(3, av, env));
 }
+
+Test (strace, ftrace_signal, redirect_all_std)
+{
+    char *av[3] = {"./strace", "tests/signal", NULL};
+    char **env = read_tab("tests/env.txt");
+
+    cr_assert_eq(0, strace(2, av, env));
+}
+
+Test (strace, ftrace_help, redirect_all_std)
+{
+    char *av[3] = {"./strace", "-h", NULL};
+    char **env = read_tab("tests/env.txt");
+
+    cr_assert_eq(0, strace(2, av, env));
+}

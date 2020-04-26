@@ -88,13 +88,11 @@ unsigned long long return_addr_from_modrm(pid_t pid, unsigned long long inst)
 
     if (mod == 0)
         addr = handle_fst_range_modrm(pid, inst, rm);
-    if (mod == 1) {
+    if (mod == 1)
         addr = handle_snd_range_modrm(pid, inst, rm, mod);
-    } else if (mod == 2) {
+    if (mod == 2)
         addr = handle_snd_range_modrm(pid, inst, rm, mod);
-    }
-    if (mod == 3) {
+    if (mod == 3)
         addr = get_addr_from_register(pid, mod_rm);
-    }
     return (addr);
 }
