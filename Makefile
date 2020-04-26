@@ -24,7 +24,7 @@ SRC_SRC	=	main.c					\
 			return.c				\
 			read_rel_rela.c			\
 			get_signal.c			\
-			calls/ea_functions.c	\
+			ea_functions.c			\
 
 SRC =	$(addprefix $(SRCDIR), $(SRC_SRC))
 
