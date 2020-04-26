@@ -32,8 +32,7 @@ void get_plt_addrs(char *elf_name, list_functions_t *arr_list)
     close(fd);
 }
 
-//TODO fixe this : why is there two call, one whith 4 argument and one with 2 ?????????????????????????????????????????????
-unsigned long long call_abs_ind(pid_t pid, unsigned long long inst)//, list_functions_t **lists_fcts, list_t **stack_fct)
+unsigned long long call_abs_ind(pid_t pid, unsigned long long inst)
 {
     unsigned char reg_opcode = 0;
     long long unsigned addr = 0;
@@ -41,13 +40,10 @@ unsigned long long call_abs_ind(pid_t pid, unsigned long long inst)//, list_func
 
     isolate_mod_rm(inst >> 8, NULL, &reg_opcode, NULL);
     if (reg_opcode == 3) {
-        printf("\ntype 3 !\n");
+        fprintf(stderr, "\ntype 3 !\n");
     }
     if (reg_opcode == 2) {
-        // printf("%x %x %x %x %x %x\n", (unsigned char) inst, (unsigned char) (inst >> 8),
-        // (unsigned char) (inst >> 16), (unsigned char) (inst >> 24), (unsigned char) (inst >> 32), (unsigned char) (inst >> 40));
         addr = return_addr_from_modrm(pid, inst);
-        // printf("addr = %x\n", addr);
     }
     return (addr);
 }
@@ -75,7 +71,8 @@ static int check_plt(pid_t pid, unsigned long long rip,
         if (!symbol_name || strcmp(symbol_name, "exit") == 0)
             return (1);
         handle_add_element(stack_fcts);
-        (*stack_fcts)->data = strdup(symbol_name);
+        (*stack_fcts)->data = create_symbol_s(strdup(symbol_name), rip);
+//        (*stack_fcts)->data = strdup(symbol_name);
         printf("Entering function %s at %#x\n", symbol_name, rip);
         return (0);
     }
@@ -88,6 +85,7 @@ int display_near_call(pid_t pid, unsigned long long inst,
     char *symbol_name;
     char *tmp;
     unsigned long long addr = 0;
+    unsigned long long old_addr = 0;
 
     if ((unsigned char) (inst) == 0xE8)
         addr = call_rel(pid);
@@ -105,7 +103,8 @@ int display_near_call(pid_t pid, unsigned long long inst,
         else
             symbol_name = strdup(symbol_name);
         handle_add_element(stack_fcts);
-        (*stack_fcts)->data = symbol_name;
+        (*stack_fcts)->data = create_symbol_s(symbol_name, addr);
+//        (*stack_fcts)->data = symbol_name;
         printf("Entering function %s at %#x\n", symbol_name, addr);
     }
     return (0);

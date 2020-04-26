@@ -68,22 +68,31 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     return (status);
 }
 
+void check_call(pid_t pid, unsigned long long inst, list_functions_t *arr_list)
+{
+    unsigned char c = ((unsigned char *) &inst)[0];
+    static list_t *stack_fcts = NULL;
+
+    if (c == 0xE8 || c == 0xFF)
+        display_near_call(pid, inst, arr_list, &stack_fcts);
+    else if (c == 0xC3 || c == 0xCB)
+        display_return_call(&stack_fcts, inst, pid);
+    if (c == 0x9a)
+        fprintf(stderr, "\nfar call with 9a\n\n");
+    //check_ret //TODO jsp c'est quoi mais bon faut pas l'oublier
+}
+
 int read_syscall(pid_t pid, char flag, long *args_syscall,
         list_functions_t *arr_list)
 {
     int status = 0;
     struct user_regs_struct reg;
     unsigned short syscall_type;
-    list_t *stack_fcts = NULL;
-    unsigned char c;
-    unsigned long long inst;
 
     while (1) {
         ptrace(PTRACE_GETREGS, pid, NULL, &reg);
         syscall_type = (unsigned short)ptrace(PTRACE_PEEKTEXT, pid, reg.rip,
                 NULL);
-        inst = ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL);
-        c = ((unsigned char *) &inst)[0];
         if (syscall_type == 0x80CD || syscall_type == 0x050F) {
             status = get_and_print_syscall(pid, flag, args_syscall, reg);
             if (WIFEXITED(status)) {
@@ -91,19 +100,9 @@ int read_syscall(pid_t pid, char flag, long *args_syscall,
                 printf("+++ exited with %d +++\n", WEXITSTATUS(status));
                 return (WEXITSTATUS(status));
             }
-        } else if (c == 0xE8) {
-            display_near_call(pid, inst, arr_list, &stack_fcts);
-        }
-        else if (c == 0xC3 || c == 0xCB) {
-            display_return_call(&stack_fcts, inst);
-        }
-        else if (c == 0xFF) {
-            call_abs_ind(pid, inst, &arr_list, &stack_fcts);
-        }
-        if (c == 0x9a) {
-            fprintf(stderr, "\nfar call with 9a\n\n");
-        }
-        //check_ret //TODO jsp c'est quoi mais bon faut pas l'oublier
+        } else
+            check_call(pid, ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL),
+                    arr_list);
         ptrace(PTRACE_SINGLESTEP, pid, NULL, NULL);
         waitpid(pid, &status, 0);
     }

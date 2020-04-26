@@ -43,11 +43,12 @@ struct symbol_s *create_symbol_s(char *name, unsigned long addr);
 void free_symbol_s(struct symbol_s *symbol);
 
 //near_call.c
-int display_near_call(pid_t pid, unsigned long long inst, list_functions_t *arr_list, list_t **stack_fcts);
+int display_near_call(pid_t pid, unsigned long long inst,
+        list_functions_t *arr_list, list_t **stack_fcts);
 void get_plt_addrs(char *elf_name, list_functions_t *arr_list);
 //unsigned long long call_abs_ind(pid_t pid, unsigned long long inst);
 
-int display_return_call(list_t **stack_fcts, unsigned long long inst);
+int display_return_call(list_t **stack_fcts, unsigned long long inst, pid_t pid);
 
 char *fetch_symbol_name(list_t *fct_list, unsigned long long addr);
 

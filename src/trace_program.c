@@ -55,7 +55,7 @@ static int fork_program(char **args, char **env, char flag)
     waitpid(pid, NULL, 0);
     return_value = read_syscall(pid, flag, args_syscall, &arr_list);
     free(args_syscall);
-    //have to free struct s //TODO where is the struct s ????
+    //have to free struct s //TODO edit remove_whole_list() because it only free the node and not the struct s inside
     if (arr_list.near_call)
         remove_whole_list(&(arr_list.near_call));
     if (arr_list.far_call)
