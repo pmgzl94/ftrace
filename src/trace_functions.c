@@ -51,6 +51,7 @@ static int get_and_print_syscall(pid_t pid, char flag, long *args_syscall,
     int status = 0;
     unsigned short syscall_type;
 
+    printf("Syscall ");
     syscall_type = (unsigned short)ptrace(PTRACE_PEEKTEXT, pid, reg.rip, NULL);
     get_registers(pid, &reg, syscall_type, args_syscall);
     if (flag & FLAG_S && check_read(args_syscall, syscall_type) == 1)
